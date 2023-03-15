@@ -1,61 +1,175 @@
-<p>add-employees works!</p>
-<form class="container" [formGroup]="addEmployee">
-    <h2> Add Employees </h2>
-    <hr>
-
-    <!-- <label for="employeeId">Id:</label><br>
-    <input type="number" id="employeeId" name="employeeId" formControlName="employeeId"><br> -->
-
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" formControlName="name" pattern="[a-z]"><br>
-
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" formControlName="email"><br>
-
-    <label for="contact">Contact:</label><br>
-    <input type="tel" id="contact" name="contact" formControlName="contact"><br>
-
-    <label for="gender">Gender:</label>
-    <input type="radio" id="gender-male" name="gender" value="male" formControlName="gender">
-    <label for="gender-male">Male</label>
-    <input type="radio" id="gender-female" name="gender" value="female" formControlName="gender">
-    <label for="gender-female">Female</label><br>
-
-    <div formArrayName="skillsAndExprience">
-        <label for="skils">Skils:</label>
-        <button (click)="createSkillsAndExpriences()">Add</button><br>
-        <ng-container *ngFor="let skill of skillsAndExprience.controls; index as i">
-
-            <div style="display: flex;" formGroupName="{{i}}">
-                <div class="skill">
-                    <input type="text" placeholder="Add Skills..." formControlName="skill">
-                </div>
-
-                <div class="exprience">
-                    <select formControlName="exprience">
-                      <option selected disabled>--select--</option>
-                      <option value="fresher">Fresher</option>
-                      <option value="1 year">1 year</option>
-                      <option value="2 year">2 year</option>
-                      <option value="3 year">3 year</option>
-                      <option value="4 year">4 year</option>
-                      <option value="5 year">5 year</option>
-                    </select>
-                </div>
-                <button *ngIf="skillsAndExprience.length>1" (click)="deleteSkillsAndExprience(i)">delete</button><br>
+<ng-container *ngIf="this.employeeService.editMode == false">
+    <form class="container" [formGroup]="addEmployee" (ngSubmit)="onSubmit()">
+        <h2>{{title}}</h2>
+        <hr>
+        <div class="row">
+            <div class="column"><label for="employeeId">Id:</label><br>
+                <input type="number" id="employeeId" name="employeeId" placeholder="Enter id" formControlName="employeeId">
             </div>
-        </ng-container>
+            <div class="column">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" placeholder="Enter name" formControlName="name" pattern="[a-z]">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" placeholder="Enter email" formControlName="email">
+            </div>
+            <div class="column">
+                <label for="contact">Contact Number:</label><br>
+                <input type="tel" id="contact" name="contact" placeholder="Enter contact number" formControlName="contact" pattern="[0-9]" maxlength="10">
+            </div>
+        </div>
 
 
-    </div>
+        <div class="row">
+            <div class="column">
+                <div formArrayName="skillsAndExprience">
+
+                    <div class="row">
+                        <div class="column">
+                            <h3 for="skils">Skils:</h3>
+                        </div>
+                        <div class="column"><button style="float: right;" type="button" (click)="createSkillsAndExpriences()">Add Skill +</button></div>
+                    </div>
+
+
+                    <ng-container *ngFor="let skill of skillsAndExprience.controls; index as i">
+                        <div formGroupName="{{i}}">
+                            <table>
+                                <tr>
+
+                                    <td>
+                                        <input type="text" placeholder="Enter skill name" formControlName="skill">
+                                    </td>
+
+                                    <td>
+                                        <select formControlName="exprience">
+                                          <option selected disabled value="">Select exprience</option>
+                                          <option value="fresher">Fresher</option>
+                                          <option value="1 year">1 year</option>
+                                          <option value="2 year">2 year</option>
+                                          <option value="3 year">3 year</option>
+                                          <option value="4 year">4 year</option>
+                                          <option value="5 year">5 year</option>
+                                        </select>
+                                    </td>
+                                    <ng-container *ngIf="skillsAndExprience.length>1">
+                                        <td>
+
+
+                                            <button id="delete" style="justify-content: right;" (click)="deleteSkillsAndExprience(i)">delete</button>
+                                        </td>
+                                    </ng-container>
+
+                                </tr>
+                            </table>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="column">
+
+                <label for="gender">Gender:</label><br>
+                <div>
+                    <input type="radio" id="gender-male" name="gender" value="male" formControlName="gender">
+                    <label for="gender-male">Male</label>
+                    <input type="radio" id="gender-female" name="gender" value="female" formControlName="gender">
+                    <label for="gender-female">Female</label>
+                </div>
+            </div>
+
+        </div>
 
 
 
-    <input type="submit" value="Add Employee" (click)="onSubmit(addEmployee)">
 
-    <button (click)="getDetails()">show data</button>
+        <input type="submit" value="Add Employee">
 
 
-</form>
+
+    </form>
+</ng-container>
 <!-- {{addEmployee.value | json }} -->
 <hr>
+<ng-container *ngIf="this.employeeService.editMode == true">
+    <form class="container" [formGroup]="editEmployee" (ngSubmit)="updateEmployeeData()">
+        <h2>{{title}}</h2>
+        <hr>
+        <div class="table">
+            <div class="column"><label for="employeeId">Id:</label><br>
+                <input type="number" id="employeeId" name="employeeId" formControlName="employeeId">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" formControlName="name" pattern="[a-z]">
+            </div>
+
+
+
+        </div>
+        <div>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" formControlName="email">
+        </div>
+        <div>
+            <label for="contact">Contact:</label><br>
+            <input type="tel" id="contact" name="contact" formControlName="contact">
+        </div>
+        <div class="row">
+            <div class="column">
+                <label for="gender">Gender:</label>
+                <input type="radio" id="gender-male" name="gender" value="male" formControlName="gender">
+                <label for="gender-male">Male</label>
+                <input type="radio" id="gender-female" name="gender" value="female" formControlName="gender">
+                <label for="gender-female">Female</label>
+            </div>
+
+        </div>
+
+        <div formArrayName="skillsAndExprience">
+            <div class="row">
+                <div class="column">
+                    <h3 for="skils">Skils:</h3>
+                </div>
+                <div class="column"><button type="button" (click)="createSkillsAndExpriencesInEdit()">Add</button><br></div>
+            </div>
+
+
+            <ng-container *ngFor="let getSkillsAndExpriencesInEdit of skillsAndExprienceInEdit.controls; index as i">
+                <div class="row" formGroupName="{{i}}">
+                    <div class="column">
+                        <input type="text" placeholder="Add Skills..." formControlName="skill">
+                    </div>
+
+                    <div class="column">
+                        <!-- <input type="text" placeholder="Add exprience..." formControlName="exprience"> -->
+                        <select formControlName="exprience">
+                          <option disabled selected>---select---</option>
+                          <option [value]="'fresher'">Fresher</option>
+                          <option [value]="'1 year'">1 year</option>
+                          <option [value]="'2 year'">2 year</option>
+                          <option [value]="'3 year'">3 year</option>
+                          <option [value]="'4 year'">4 year</option>
+                          <option [value]="'5 year'">5 year</option>
+                        </select>
+                    </div>
+                    <ng-container *ngIf="skillsAndExprienceInEdit.length>1">
+                        <div class="column">
+                            <button (click)="deleteSkillsAndExprienceInEdit(i)">delete</button>
+                        </div>
+                    </ng-container>
+                </div>
+
+            </ng-container>
+        </div>
+
+
+
+
+        <input type="submit" value="Add Employee">
+
+
+
+    </form>
+</ng-container>

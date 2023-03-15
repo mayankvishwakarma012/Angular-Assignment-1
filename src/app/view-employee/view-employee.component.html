@@ -1,1 +1,43 @@
-<p>view-employee works!</p>
+<div class="row">
+    <div class="column">
+        <h1>Employee List</h1>
+    </div>
+    <div class="column"><button routerLink="/Add-employees" (click)="this.employeeService.editModeToggle(false)">Add Employees</button></div>
+</div>
+
+<table class="employee-table">
+    <thead>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Gender</th>
+        <th>Skils</th>
+        <th>Action </th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let employee of getEmployees; index as i">
+            <td>{{employee.id}}</td>
+            <td>{{employee.name}}</td>
+            <td>{{employee.email}}</td>
+            <td>{{employee.contact}}</td>
+            <td>{{employee.gender}}</td>
+            <td>
+                <ul>
+                    <li *ngFor="let skillnExp of employee.skillsAndExpriences ; index as i">
+                        {{skillnExp.skill }} {{" ("+skillnExp.exprience+") "}}
+                    </li>
+                </ul>
+            </td>
+            <td>
+                <button (click)="editEmployee(i)" (click)="this.employeeService.editModeToggle(true)" routerLink="/Edit-employees">Edit</button>
+                <button (click)="deleteEmployee(i,employee.name)">Delete</button>
+            </td>
+
+
+
+
+        </tr>
+    </tbody>
+
+</table>

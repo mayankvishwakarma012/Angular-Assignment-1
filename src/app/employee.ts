@@ -1,10 +1,13 @@
-export class Employee {
-  constructor(
-    id: String,
+export interface Employee {
+    id: number,
     name : String,
     email:String,
-    contact: String,
+    contact: number,
     gender: String,
-    skillsAndExpriences : { skill: String, exprience :String } []
-    ){}
+    skillsAndExpriences :  skillsAndExpriences[]
+
+}
+export interface skillsAndExpriences{
+   skill: String,
+   exprience :String
 }
