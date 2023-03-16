@@ -1,5 +1,6 @@
+import { Router } from '@angular/router';
 import { Component, Output ,EventEmitter, OnInit } from '@angular/core';
-import { FormGroup , FormControl, FormArray, Validators } from '@angular/forms';
+import { FormGroup , FormControl, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Employee , skillsAndExpriences } from './../employee';
 import { EmployeeService } from '../employee.service';
 
@@ -10,9 +11,9 @@ import { EmployeeService } from '../employee.service';
 })
 export class AddEmployeesComponent implements OnInit  {
   editMode: Boolean = this.employeeService.editMode;
-  title : String = "Add Employees ";
+  title !: String;
 
-  constructor(public employeeService : EmployeeService){}
+  constructor(public employeeService : EmployeeService , public router : Router) {}
 
   addEmployee !: FormGroup;
   employee !: Employee;
@@ -30,6 +31,7 @@ export class AddEmployeesComponent implements OnInit  {
         this.title =" Edit Employees "; // title of page
         const editEmployeeGet = this.employeeService.editEmployeeDetails;//geting details to update and set them to edit employee form
 
+        console.log(editEmployeeGet.contact);
         this.editEmployee = new FormGroup({
           employeeId: new FormControl(editEmployeeGet.id , Validators.required),
           name: new FormControl(editEmployeeGet.name,Validators.required),
@@ -46,7 +48,8 @@ export class AddEmployeesComponent implements OnInit  {
                   exprience: new FormControl(editEmployeeGetskil.exprience,Validators.required)
                 }));
           }
-    }
+
+          }
       else{
         this.title =" Add Employees ";
         this.addEmployee = new FormGroup({
@@ -61,10 +64,8 @@ export class AddEmployeesComponent implements OnInit  {
                   exprience: new FormControl('',Validators.required)
               })])
           });
+
       }
-
-
-
     }
 
 
@@ -75,7 +76,7 @@ export class AddEmployeesComponent implements OnInit  {
     const skills = this.skillsAndExprience.value;
 
       this.employee = {
-        id: formData.emploeeId ,
+        id: formData.employeeId ,
         name: formData.name,
         email: formData.email,
         contact: formData.contact,
@@ -87,39 +88,42 @@ export class AddEmployeesComponent implements OnInit  {
       this.employeeService.addEmployee(this.employee);
     }
 
-  get addEmployeeControls(){// To access skillsAndExprience form group in add employee form
-    return this.addEmployee.controls;
+    navigateToEmployeeList() { //navigate to employee list
+      this.router.navigate(['/Employee-list']);
+    }
+  get addEmployeeControls(){ //To access addEmployee form group
+    return (this.addEmployee as FormGroup).controls;
   }
   get skillsAndExprience(){// To access skillsAndExprience form group in add employee form
     return this.addEmployee.get('skillsAndExprience') as FormArray;
   }
 
 
-  // create skill fields dynamically
+
+  // create skill fields dynamically in addEmployee form
   createSkillsAndExpriences(){
      this.skillsAndExprience.push(
       new FormGroup({
-        skill: new FormControl(''),
-        exprience: new FormControl('')
+        skill: new FormControl('',Validators.required),
+        exprience: new FormControl('',Validators.required)
      })
      );
   }
-// delete skill fields dinamically
+// delete skill fields dinamically in addEmployee form
   deleteSkillsAndExprience(i : number){
     this.skillsAndExprience.removeAt(i);
   }
 
   ////////////////////////////// Edit-Employee Form Methods ////////////////////////////////////
 
+
+  get editEmployeeControls(){
+    return (this.editEmployee as FormGroup).controls;
+  }
   get skillsAndExprienceInEdit(){
     return this.editEmployee.get('skillsAndExprience') as FormArray;
   }
-  get skillInEdit(){
-    return this.skillsAndExprienceInEdit.get('skill') as FormControl;
-  }
-  get exprienceInEdit(){
-    return this.skillsAndExprienceInEdit.get('exprience') as FormControl;
-  }
+
   createSkillsAndExpriencesInEdit(){
     this.skillsAndExprienceInEdit.push(new FormGroup({
      skill: new FormControl(''),

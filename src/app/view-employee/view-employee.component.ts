@@ -9,33 +9,47 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewEmployeeComponent implements OnInit {
   constructor(public employeeService : EmployeeService){}
-  ngOnInit(): void {
-
-    // this.employee = {id: 1, name: 'name',email: 'email',contact: 1234567890,gender: 'male',skillsAndExpriences: [{skill:'skill',exprience:'fresher'},{skill:'skill',exprience:'1 year'}]};
-    // this.employeeService.addEmployee(this.employee);
-    // this.employee = {id: 2, name: 'name',email: 'email',contact: 1234567890,gender: 'female',skillsAndExpriences: [{skill:'skill',exprience:'fresher'},{skill:'skill',exprience:'1 year'}]};
-    // this.employeeService.addEmployee(this.employee);
-    // this.employee = {id: 3, name: 'name',email: 'email',contact: 1234567890,gender: 'male',skillsAndExpriences: [{skill:'skill',exprience:'fresher'},{skill:'skill',exprience:'1 year'}]};
-    // this.employeeService.addEmployee(this.employee);
-    // this.employee = {id: 4, name: 'name',email: 'email',contact: 1234567890,gender: 'female',skillsAndExpriences: [{skill:'skill',exprience:'fresher'},{skill:'skill',exprience:'1 year'}]};
-    // this.employeeService.addEmployee(this.employee);
-    // this.employee = {id: 5, name: 'name',email: 'email',contact: 1234567890,gender: 'male',skillsAndExpriences: [{skill:'skill',exprience:'fresher'},{skill:'skill',exprience:'1 year'}]};
-    // this.employeeService.addEmployee(this.employee);
-    // this.employee = {id: 6, name: 'name',email: 'email',contact: 1234567890,gender: 'female',skillsAndExpriences: [{skill:'skill',exprience:'fresher'},{skill:'skill',exprience:'1 year'}]};
-    // this.employeeService.addEmployee(this.employee);
-  }
+  ngOnInit(): void {}
 
   getEmployees = this.employeeService.employeeDetails;
 
   skill !: skillsAndExpriences;
   employee !: Employee;
 
+
+  showConfirmation = false;
+  employeeIdToDelete !: number;
+  employeeNameToDelete !: String;
+  showSuccess = false;
+  successMessage !: string;
+
   deleteEmployee(employeeId : number, employeeName : String){
     console.log("Employee Id : " +(employeeId+1) +" is deleted...")
-    confirm("Are you sure you want to delete : "+ employeeName) ?this.employeeService.deleteEmployee(employeeId):console.log("no row deleted...");
+    this.employeeIdToDelete = employeeId;
+    this.employeeNameToDelete = employeeName;
+    this.showConfirmation = true;
+    // confirm("Are you sure you want to delete : "+ employeeName) ?this.employeeService.deleteEmployee(employeeId):console.log("no row deleted...");
 
 
   }
+  confirmDelete(): void {
+    this.showSuccess = true;
+    this.employeeService.deleteEmployee(this.employeeIdToDelete);
+    this.showConfirmation = false;
+    this.successMessage = `The Employee ${this.employeeNameToDelete} is deleted successfully.`;
+    setTimeout(() => {
+      this.showSuccess = false;
+      this.successMessage = '';
+    }, 2000);
+
+
+  }
+  cancelDelete(): void {
+    this.showConfirmation = false;
+    this.employeeIdToDelete = -1;
+    this.employeeNameToDelete = '';
+  }
+
 
   editEmployee(i : number){
     console.log("Employee Id : " +(i+1) +" is selected for edit...");

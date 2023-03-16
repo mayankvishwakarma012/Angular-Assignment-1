@@ -25,13 +25,13 @@
             <td>
                 <ul>
                     <li *ngFor="let skillnExp of employee.skillsAndExpriences ; index as i">
-                        {{skillnExp.skill }} {{" ("+skillnExp.exprience+") "}}
+                        {{skillnExp.skill }} {{skillnExp.exprience}}
                     </li>
                 </ul>
             </td>
             <td>
-                <button (click)="editEmployee(i)" (click)="this.employeeService.editModeToggle(true)" routerLink="/Edit-employees">Edit</button>
-                <button (click)="deleteEmployee(i,employee.name)">Delete</button>
+                <button style="border:none; font-size: 20px;" (click)="editEmployee(i)" (click)="this.employeeService.editModeToggle(true)" routerLink="/Edit-employees"><i class="fa-solid fa-pencil"></i></button>&nbsp;
+                <button style="border:none; font-size: 20px;;" (click)="deleteEmployee(i,employee.name)"><i class="fa-solid fa-trash"></i></button>
             </td>
 
 
@@ -41,3 +41,18 @@
     </tbody>
 
 </table>
+
+<div *ngIf="showConfirmation" id="myModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete {{ employeeNameToDelete }} ?</p>
+        <button (click)="confirmDelete()">Yes</button>
+        <button (click)="cancelDelete()">No</button>
+    </div>
+</div>
+
+
+<div *ngIf="showSuccess" id="myModal" class="modal">
+    <div class="modal-content">{{ successMessage }}
+
+    </div>
+</div>
