@@ -5,14 +5,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ViewEmployeeComponent } from './employee/view-employee/view-employee.component';
-import { AddEditEmployeeComponent } from './employee/add-edit-employee/add-edit-employee.component';
+import { AddEmployeesComponent } from './add-employees/add-employees.component';
+import { ViewEmployeeComponent } from './view-employee/view-employee.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AddEmployeesComponent,
     ViewEmployeeComponent,
-    AddEditEmployeeComponent,
   ],
   imports: [
     BrowserModule,

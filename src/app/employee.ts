@@ -4,10 +4,10 @@ export interface Employee {
     email:String,
     contact: number,
     gender: String,
-    skillsAndExpriences :  SkillsAndExpriences[]
+    skillsAndExpriences :  skillsAndExpriences[]
 
 }
-export interface SkillsAndExpriences{
+export interface skillsAndExpriences{
    skill: String,
    exprience :String
 }
