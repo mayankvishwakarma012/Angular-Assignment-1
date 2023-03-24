@@ -1,5 +1,5 @@
-import { EmployeeService } from './../employee.service';
-import { Employee, skillsAndExpriences } from './../employee';
+import { EmployeeService } from 'src/app/employee-services/employee.service';
+import { Employee, SkillsAndExpriences } from 'src/app/employee-services/employee';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,28 +9,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewEmployeeComponent implements OnInit {
   constructor(public employeeService : EmployeeService){}
+
   ngOnInit(): void {}
 
   getEmployees = this.employeeService.employeeDetails;
 
-  skill !: skillsAndExpriences;
+  skill !: SkillsAndExpriences;
   employee !: Employee;
 
 
   showConfirmation = false;
-  employeeIdToDelete !: number;
+  employeeIdToDelete !: number;// to store the index of employee
   employeeNameToDelete !: String;
+
   showSuccess = false;
   successMessage !: string;
 
+// delete function for deleting employee from list and displaye alert
   deleteEmployee(employeeId : number, employeeName : String){
-    console.log("Employee Id : " +(employeeId+1) +" is deleted...")
     this.employeeIdToDelete = employeeId;
     this.employeeNameToDelete = employeeName;
     this.showConfirmation = true;
-    // confirm("Are you sure you want to delete : "+ employeeName) ?this.employeeService.deleteEmployee(employeeId):console.log("no row deleted...");
-
-
   }
   confirmDelete(): void {
     this.showSuccess = true;
@@ -50,15 +49,11 @@ export class ViewEmployeeComponent implements OnInit {
     this.employeeNameToDelete = '';
   }
 
-
+// get details to update
   editEmployee(i : number){
-    console.log("Employee Id : " +(i+1) +" is selected for edit...");
     const user : Employee = this.employeeService.employeeDetails[i];
     this.employeeService.editEmployeeGet(user,i);
   }
-
-
-  //this.getEmployees = this.detail.details.find(x => x.id==this.activeRoute);
 
   showEmployee(){
     return (this.getEmployees)
